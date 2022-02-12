@@ -6,8 +6,8 @@ import com.intelliarts.test.exception.category.CategoryItemsException;
 import com.intelliarts.test.model.Category;
 import com.intelliarts.test.model.SoldItems;
 import com.intelliarts.test.repository.CategoryRepository;
-import com.intelliarts.test.repository.SoldItemsRepository;
 import com.intelliarts.test.service.CategoryService;
+import com.intelliarts.test.service.SoldItemsService;
 import com.intelliarts.test.validator.CategoryCreateValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,21 +21,17 @@ import java.util.stream.Collectors;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
-    private final SoldItemsRepository soldItemsRepository;
+    private final SoldItemsService soldItemsService;
     private final List<CategoryCreateValidator> categoryCreateValidator;
 
     @Autowired
-    public CategoryServiceImpl(CategoryRepository categoryRepository, SoldItemsRepository soldItemsRepository,
-                               List<CategoryCreateValidator> categoryCreateValidator) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, SoldItemsService soldItemsService, List<CategoryCreateValidator> categoryCreateValidator) {
         this.categoryRepository = categoryRepository;
-        this.soldItemsRepository = soldItemsRepository;
+        this.soldItemsService = soldItemsService;
         this.categoryCreateValidator = categoryCreateValidator;
     }
 
-    @Override
-    public CategoryDTO getById(Long id) {
-        return map(categoryRepository.getById(id));
-    }
+
 
     @Override
     public CategoryDTO addCategory(CategoryDTO categoryDTO) {
@@ -53,10 +49,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     public CategoryDTO addItems(String name, int count) {
-        Category category = categoryRepository.getCategoryByName(name);
+        CategoryDTO category = getCategoryByName(name);
+        if (count <= 0) {
+            throw new CategoryItemsException("Items can't be 0 or less than 0!");
+        }
         category.setItems(category.getItems() + count);
-        categoryRepository.save(category);
-        return map(category);
+        categoryRepository.save(map(category));
+        return category;
     }
 
     @Override
@@ -76,8 +75,8 @@ public class CategoryServiceImpl implements CategoryService {
         }
         category.setItems(category.getItems() - 1);
         categoryRepository.save(category);
-        SoldItems purchase = new SoldItems(category.getName(), category.getPrice(), date,1);
-        soldItemsRepository.save(purchase);
+        SoldItems purchase = new SoldItems(category.getName(), category.getPrice(), date, 1);
+        soldItemsService.create(purchase);
         return purchase;
     }
 
@@ -92,10 +91,6 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.delete(category);
         return category.getName() + " " + category.getPrice();
 
-    }
-
-    public List<Category> test(){
-        return categoryRepository.queryTest();
     }
 
 

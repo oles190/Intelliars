@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.*;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.*;
 
 @Service
 public class SoldItemsServiceImpl implements SoldItemsService {
@@ -22,43 +24,37 @@ public class SoldItemsServiceImpl implements SoldItemsService {
         this.soldItemsRepository = soldItemsRepository;
     }
 
-    //TODO :::::::::::::::
-    @Override
-    public List<SoldItems> totalForDay(LocalDate localDate) {
-        List<SoldItems> list = soldItemsRepository.getSoldItemsByDate(localDate)
-                .stream().sorted().collect(Collectors.toList());
-        double sum = 0;
-        for (SoldItems one : list) {
-            sum += one.getPrice();
-        }
-        return list;
-
-    }
-
-
-    //TODO :::::::::::::::
-    public String totalForMonth(LocalDate date) {
+    public String totalForMonth(YearMonth date) {
         List<SoldItems> all = soldItemsRepository.findAll();
         List<SoldItems> list = all.stream().filter(
                         one -> one.getDate().getYear() == date.getYear() &&
                                 one.getDate().getMonth() == date.getMonth())
-                .collect(Collectors.toList());
+                .collect(toList());
         double sum = 0;
         for (SoldItems one : list) {
             sum += one.getPrice();
         }
-        return "Total for the  " + date.getMonth() + " " + date.getYear() + " is " + sum;
+        return "Total for the  " + date + " is " + sum;
+
+
     }
+
 
     @Override
     public List<SoldItemsDTO> reportSinceDate(LocalDate date) {
-        List<SoldItemsDTO> list = soldItemsRepository.testQuery(date);
-        double total = 0;
-        for (SoldItemsDTO one : list) {
-            total += one.getPrice();
-        }
-        return list.stream().sorted().collect(Collectors.toList());
+        List<SoldItemsDTO> list = soldItemsRepository.allSoldSinceDate(date);
+//        if we need to output total, we can return total
+//        double total = 0;
+//        for (SoldItemsDTO one : list) {
+//            total += one.getPrice();
+//        }
+        return list.stream().sorted().collect(toList());
+    }
 
+
+    @Override
+    public void create(SoldItems soldItems) {
+        soldItemsRepository.save(soldItems);
     }
 
 

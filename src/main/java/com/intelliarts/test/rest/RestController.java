@@ -11,17 +11,18 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
-@RestController
+@org.springframework.web.bind.annotation.RestController
 @RequestMapping("/categories")
-public class CategoryRestController {
+public class RestController {
 
     private final CategoryService categoryService;
     private final SoldItemsService soldItemsService;
 
     @Autowired
-    public CategoryRestController(CategoryService categoryService, SoldItemsService soldItemsService) {
+    public RestController(CategoryService categoryService, SoldItemsService soldItemsService) {
         this.categoryService = categoryService;
         this.soldItemsService = soldItemsService;
     }
@@ -32,10 +33,6 @@ public class CategoryRestController {
         return categoryService.addCategory(categoryDTO);
     }
 
-    @GetMapping("/{id}")
-    public CategoryDTO getById(@PathVariable Long id) {
-        return categoryService.getById(id);
-    }
 
     @GetMapping("/byName/{name}")
     public CategoryDTO getCategoryByName(@PathVariable String name) {
@@ -59,15 +56,6 @@ public class CategoryRestController {
         return categoryService.getAll();
     }
 
-    @GetMapping("/day/{date}")
-    public List<SoldItems> totalForDay(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-        return soldItemsService.totalForDay(date);
-    }
-
-    @GetMapping("/month/{date}")
-    public String totalForMonth(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-        return soldItemsService.totalForMonth(date);
-    }
 
     @DeleteMapping("/{name}")
     public String clear(@PathVariable String name) {
@@ -76,9 +64,15 @@ public class CategoryRestController {
 
 
     @GetMapping("/report/{date}")
-    public List<SoldItemsDTO> testQuery(@PathVariable
-                                        @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+    public List<SoldItemsDTO> reportSinceDate(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
         return soldItemsService.reportSinceDate(date);
+    }
+
+
+    @GetMapping("/totalForMonth/{date}")
+    public String totalForMonth(@PathVariable YearMonth date) {
+
+        return soldItemsService.totalForMonth(date);
     }
 
 

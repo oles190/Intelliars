@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @Entity
-public class SoldItems implements Comparable<SoldItems> {
+public class SoldItems {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,9 +31,4 @@ public class SoldItems implements Comparable<SoldItems> {
         this.items = items;
     }
 
-
-    @Override
-    public int compareTo(SoldItems o) {
-        return (int) (this.getPrice() - o.getPrice());
-    }
 }

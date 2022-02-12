@@ -10,7 +10,6 @@ import java.util.List;
 
 public interface CategoryService {
 
-    CategoryDTO getById(Long id);
 
     CategoryDTO map(Category category);
 
@@ -27,8 +26,6 @@ public interface CategoryService {
     List<CategoryDTO> getAll();
 
     String delete(String name);
-
-    List<Category> test();
 
 
 }

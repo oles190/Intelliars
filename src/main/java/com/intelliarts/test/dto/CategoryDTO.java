@@ -1,12 +1,10 @@
 package com.intelliarts.test.dto;
 
 import com.intelliarts.test.model.Category;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 public class CategoryDTO implements Comparable<CategoryDTO> {
     private Long id;
