@@ -15,7 +15,6 @@ public class SoldItemsDTO implements Comparable<SoldItemsDTO> {
     private Long items;
 
 
-
     @Override
     public int compareTo(SoldItemsDTO o) {
         return this.name.compareTo(o.getName());

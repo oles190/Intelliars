@@ -36,8 +36,7 @@ public class RestController {
 
     @GetMapping("/byName/{name}")
     public CategoryDTO getCategoryByName(@PathVariable String name) {
-        return categoryService.getCategoryByName(name);
-
+        return categoryService.getCategory(name);
     }
 
     @PostMapping("/items")
@@ -56,18 +55,15 @@ public class RestController {
         return categoryService.getAll();
     }
 
-
     @DeleteMapping("/{name}")
     public String clear(@PathVariable String name) {
         return categoryService.delete(name);
     }
 
-
     @GetMapping("/report/{date}")
     public List<SoldItemsDTO> reportSinceDate(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
         return soldItemsService.reportSinceDate(date);
     }
-
 
     @GetMapping("/totalForMonth/{date}")
     public String totalForMonth(@PathVariable YearMonth date) {

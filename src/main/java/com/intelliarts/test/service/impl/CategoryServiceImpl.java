@@ -1,6 +1,5 @@
 package com.intelliarts.test.service.impl;
 
-
 import com.intelliarts.test.dto.CategoryDTO;
 import com.intelliarts.test.exception.category.CategoryItemsException;
 import com.intelliarts.test.model.Category;
@@ -9,34 +8,41 @@ import com.intelliarts.test.repository.CategoryRepository;
 import com.intelliarts.test.service.CategoryService;
 import com.intelliarts.test.service.SoldItemsService;
 import com.intelliarts.test.validator.CategoryCreateValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @Service
+@Slf4j
+@AllArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final SoldItemsService soldItemsService;
     private final List<CategoryCreateValidator> categoryCreateValidator;
 
-    @Autowired
-    public CategoryServiceImpl(CategoryRepository categoryRepository, SoldItemsService soldItemsService, List<CategoryCreateValidator> categoryCreateValidator) {
-        this.categoryRepository = categoryRepository;
-        this.soldItemsService = soldItemsService;
-        this.categoryCreateValidator = categoryCreateValidator;
+
+    @Override
+    public CategoryDTO getCategory(String name) {
+        Category category = categoryRepository.getCategoryByName(name);
+        if (category == null) {
+            throw new CategoryItemsException("Category is null");
+        }
+        return map(category);
     }
-
-
 
     @Override
     public CategoryDTO addCategory(CategoryDTO categoryDTO) {
         for (CategoryCreateValidator validator : categoryCreateValidator) {
             validator.validate(map(categoryDTO));
+        }
+        Category isPresent = categoryRepository.getCategoryByName(categoryDTO.getName());
+        if (isPresent != null) {
+            throw new RuntimeException("Already Exist");
         }
         Category category = map(categoryDTO);
         categoryRepository.save(category);
@@ -44,18 +50,16 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDTO getCategoryByName(String name) {
-        return map(categoryRepository.getCategoryByName(name));
-    }
-
     public CategoryDTO addItems(String name, int count) {
-        CategoryDTO category = getCategoryByName(name);
         if (count <= 0) {
-            throw new CategoryItemsException("Items can't be 0 or less than 0!");
+            throw new RuntimeException("Count can't be  0 or less than 0!");
         }
-        category.setItems(category.getItems() + count);
-        categoryRepository.save(map(category));
-        return category;
+        CategoryDTO categoryDTO = getCategory(name);
+        validateItems(map(categoryDTO));
+        categoryDTO.setItems(categoryDTO.getItems() + count);
+        categoryRepository.save(map(categoryDTO));
+        log.info("Success!");
+        return categoryDTO;
     }
 
     @Override
@@ -68,11 +72,10 @@ public class CategoryServiceImpl implements CategoryService {
         return new Category(categoryDTO);
     }
 
+    @Override
     public SoldItems purchase(String name, LocalDate date) {
-        Category category = categoryRepository.getCategoryByName(name);
-        if (category.getItems() == 0) {
-            throw new CategoryItemsException("Items is 0");
-        }
+        Category category = map(getCategory(name));
+        validateItems(category);
         category.setItems(category.getItems() - 1);
         categoryRepository.save(category);
         SoldItems purchase = new SoldItems(category.getName(), category.getPrice(), date, 1);
@@ -86,11 +89,18 @@ public class CategoryServiceImpl implements CategoryService {
         return categories.stream().map(this::map).sorted().collect(Collectors.toList());
     }
 
+    @Override
     public String delete(String name) {
-        Category category = categoryRepository.getCategoryByName(name);
-        categoryRepository.delete(category);
-        return category.getName() + " " + category.getPrice();
+        CategoryDTO categoryDTO = getCategory(name);
+        categoryRepository.delete(map(categoryDTO));
+        return categoryDTO.getName() + " " + categoryDTO.getPrice();
+    }
 
+
+    public void validateItems(Category category) {
+        if (category.getItems() <= 0) {
+            throw new CategoryItemsException("Items is null or less");
+        }
     }
 
 

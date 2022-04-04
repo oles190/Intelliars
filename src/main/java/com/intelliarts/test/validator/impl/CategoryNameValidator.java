@@ -8,10 +8,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class CategoryNameValidator implements CategoryCreateValidator {
     @Override
-    public void validate(Category category) {
+    public boolean validate(Category category) {
 
         if (category.getName() == null || category.getName().isEmpty()) {
-            throw new CategoryNameException("Name can't be null or empity!");
+            throw new CategoryNameException("Name can't be null or empty!");
         }
+        return true;
     }
 }

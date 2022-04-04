@@ -7,10 +7,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class CategoryItemsException implements CategoryCreateValidator {
     @Override
-    public void validate(Category category) {
+    public boolean validate(Category category) {
         if (category.getItems() < 0) {
             throw new com.intelliarts.test.exception.category.
                     CategoryItemsException("item can't be less than 0!");
         }
+        return true;
     }
 }

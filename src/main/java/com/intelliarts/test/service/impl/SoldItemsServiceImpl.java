@@ -35,20 +35,21 @@ public class SoldItemsServiceImpl implements SoldItemsService {
             sum += one.getPrice();
         }
         return "Total for the  " + date + " is " + sum;
-
-
     }
-
 
     @Override
     public List<SoldItemsDTO> reportSinceDate(LocalDate date) {
         List<SoldItemsDTO> list = soldItemsRepository.allSoldSinceDate(date);
+        if (list.isEmpty()) {
+            throw new NullPointerException("there were not sold items from date " + date);
+        }
 //        if we need to output total, we can return total
 //        double total = 0;
 //        for (SoldItemsDTO one : list) {
 //            total += one.getPrice();
 //        }
         return list.stream().sorted().collect(toList());
+
     }
 
 
