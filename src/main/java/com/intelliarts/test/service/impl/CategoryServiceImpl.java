@@ -41,7 +41,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
         Category isPresent = categoryRepository.getCategoryByName(categoryDTO.getName());
         if (isPresent != null) {
-            throw new RuntimeException("Already Exist" );
+            throw new RuntimeException("Already Exist");
         }
         Category category = map(categoryDTO);
         categoryRepository.save(category);
