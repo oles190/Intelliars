@@ -26,6 +26,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final List<CategoryCreateValidator> categoryCreateValidator;
 
 
+
     @Override
     public CategoryDTO getCategory(String name) {
         Category category = categoryRepository.getCategoryByName(name);
