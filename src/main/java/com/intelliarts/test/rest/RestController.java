@@ -31,6 +31,7 @@ public class RestController {
     @PostMapping()
     public CategoryDTO addCategory(@RequestBody CategoryDTO categoryDTO) {
         return categoryService.addCategory(categoryDTO);
+
     }
 
 
