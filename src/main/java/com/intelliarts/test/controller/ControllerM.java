@@ -36,9 +36,4 @@ public class ControllerM {
         session.setAttribute("list", list);
         response.sendRedirect("/mvc/allCategories");
     }
-
-
-
-
-
 }
