@@ -67,6 +67,4 @@ public class ControllerM {
         //   request.getServletContext().getRequestDispatcher("/second.jsp").forward(request, response);
         response.sendRedirect("/mvc/second");
     }
-
-
 }
