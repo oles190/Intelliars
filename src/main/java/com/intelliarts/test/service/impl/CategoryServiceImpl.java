@@ -95,8 +95,7 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryDTO.getName() + " " + categoryDTO.getPrice();
     }
 
-
-    public void validateItems(Category category) {
+    private void validateItems(Category category) {
         if (category.getItems() <= 0) {
             throw new CategoryItemsException("Items is null or less");
         }

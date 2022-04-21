@@ -48,7 +48,8 @@ class SoldItemsServiceImplTest {
     void reportSinceDateThrow() {
         List<SoldItemsDTO> list = new ArrayList<>();
         Mockito.when(soldItemsRepository.allSoldSinceDate(LocalDate.now())).thenReturn(list);
-        RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> soldItemsService.reportSinceDate(LocalDate.now()));
+        RuntimeException exception = Assertions.assertThrows(RuntimeException.class,
+                () -> soldItemsService.reportSinceDate(LocalDate.now()));
         Assertions.assertEquals("there were not sold items from date " + LocalDate.now(), exception.getMessage());
     }
 

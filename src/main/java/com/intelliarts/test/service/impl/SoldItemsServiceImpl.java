@@ -3,6 +3,7 @@ package com.intelliarts.test.service.impl;
 import com.intelliarts.test.dto.SoldItemsDTO;
 import com.intelliarts.test.model.SoldItems;
 import com.intelliarts.test.repository.SoldItemsRepository;
+import com.intelliarts.test.service.CategoryService;
 import com.intelliarts.test.service.SoldItemsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,6 @@ import static java.util.stream.Collectors.*;
 public class SoldItemsServiceImpl implements SoldItemsService {
 
     private final SoldItemsRepository soldItemsRepository;
-
 
     @Autowired
     public SoldItemsServiceImpl(SoldItemsRepository soldItemsRepository) {

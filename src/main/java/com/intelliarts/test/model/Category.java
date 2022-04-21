@@ -19,6 +19,8 @@ public class Category {
     private String name;
     private int items;
 
+
+
     public Category(CategoryDTO categoryDTO) {
         this.id = categoryDTO.getId();
         this.price = categoryDTO.getPrice();
