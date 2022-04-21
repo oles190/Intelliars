@@ -46,7 +46,6 @@ public class ControllerM {
         response.sendRedirect("/mvc/second");
     }
 
-
     @GetMapping("/start")
     public String test2() {
         return "/WEB-INF/pages/first.jsp";
