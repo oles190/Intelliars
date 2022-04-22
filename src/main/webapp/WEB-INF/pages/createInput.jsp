@@ -6,13 +6,25 @@
 
 <body>
 
-<form action="/mvc/create" method="post">
+<h1>Creating Category</h1>
+<div class="main">
+    <form action="/mvc/create" method="post">
+        <div class="one">
+            <p><input tabindex="1" type="text" placeholder="name" name="name"></p>
+            <p><input tabindex="2" type="text" placeholder="price" name="price"></p>
+            <p><input tabindex="3" type="text" placeholder="items" name="items"></p>
+            <p><input type="submit" value="send"></p>
 
-    <input type="text" name="name">
-    <input type="text" name="price">
-    <input type="text" name="items">
-    <input type="submit" value="send">
-</form>
+            <div>
+                <input type="radio" name="gender" value="boy">one
+            </div>
+            <div>
+                <input type="radio" name="gender" value="girl">two
+            </div>
+        </div>
 
+
+    </form>
+</div>
 </body>
 </html>
